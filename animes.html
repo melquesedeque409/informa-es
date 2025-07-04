@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeVerse - O Universo dos Animes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head> 
+<style> 
+  :root {
+    --primary: #ff4d89;
+    --primary-dark: #e83a72;
+    --secondary: #6c5ce7;
+    --dark: #2d3436;
+    --light: #f5f6fa;
+    --glass: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: var(--light);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary);
+    z-index: 9999;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.7s ease-in-out;
+}
+
+.page-transition.active {
+    transform: scaleY(1);
+    transform-origin: top;
+}
+
+.glass-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--light);
+    position: relative;
+    cursor: pointer;
+}
+
+.logo::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    color: var(--primary);
+    overflow: hidden;
+    transition: width 0.5s ease;
+}
+
+.logo:hover::before {
+    width: 100%;
+}
+
+.search-container {
+    position: relative;
+    width: 30%;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    color: var(--light);
+    font-size: 1rem;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(255, 77, 137, 0.3);
+}
+
+.search-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--light);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.search-btn:hover {
+    color: var(--primary);
+}
+
+.search-results {
+    position: absolute;
+    top: 120%;
+    left: 0;
+    width: 100%;
+    background: rgba(30, 30, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    z-index: 1001;
+}
+
+.search-container.active .search-results {
+    opacity: 1;
+    visibility: visible;
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: var(--light);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: var(--transition);
+}
+
+.hover-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: var(--transition);
+}
+
+.hover-underline:hover::after {
+    width: 100%;
+}
+
+.btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.login-btn {
+    background: transparent;
+    color: var(--light);
+    border: 1px solid var(--light);
+}
+
+.login-btn:hover {
+    background: var(--light);
+    color: var(--dark);
+}
+
+.register-btn {
+    background: var(--primary);
+    color: var(--light);
+}
+
+.register-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 77, 137, 0.4);
+}
+
+.menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--light);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.hero {
+  background-image: url("https://images.openai.com/thumbnails/url/cFJMRXicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4K9N4sCYpyD0t1NtT19ck0rQgx9DevSC52qcxMr3AtCs8udDIw8TEILnE38A8wjjB0LjcrTXX0DTaOKFcrBgAGeCkK");
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 400px; 
+  
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 80vh;
+    margin-top: 80px;
+    overflow: hidden;
+}
+
+.hero-slider {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.slide-content {
+    position: absolute;
+    bottom: 20%;
+    left: 10%;
+    max-width: 600px;
+    z-index: 10;
+}
+
+.slide-title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.slide-desc {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.slide-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.primary-btn {
+    background: var(--primary);
+    color: var(--light);
+    font-size: 1.1rem;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.primary-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 77, 137, 0.3);
+}
+
+.outline-btn {
+    background: transparent;
+    color: var(--light);
+    border: 1px solid var(--light);
+    font-size: 1.1rem;
+    padding: 0.8rem 2rem;
+}
+
+.outline-btn:hover {
+    background: var(--light);
+    color: var(--dark);
+}
+
+.slider-controls {
+    position: absolute;
+    bottom: 50px;
+    left: 10%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 10;
+}
+
+.slider-prev, .slider-next {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--glass);
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--glass-border);
+    color: var(--light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.slider-prev:hover, .slider-next:hover {
+    background: var(--primary);
+    transform: translateY(-3px);
+}
+
+.slider-dots {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--glass);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.dot.active {
+    background: var(--primary);
+    transform: scale(1.2);
+}
+
+/* Anime Cards */
+.section-title {
+    font-size: 2.5rem;
+    margin: 3rem 0 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.section-title span {
+    position: relative;
+    display: inline-block;
+    padding: 0 1.5rem;
+}
+
+.section-title span::before, .section-title span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+}
+
+.section-title span::before {
+    right: 100%;
+}
+
+.section-title span::after {
+    left: 100%;
+}
+
+.anime-cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 5%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Estiliza a barra de rolagem (Chrome, Edge) */
+.anime-cards-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.anime-cards-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.anime-cards-container::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 100, 0.4);
+    border-radius: 4px;
+}
+
+/* Firefox */
+.anime-cards-container {
+    scrollbar-color: rgba(100, 100, 100, 0.4) transparent;
+    scrollbar-width: thin;
+}
+
+
+
+
+.anime-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    aspect-ratio: 2/3;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    width: 220px;
+    flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .anime-cards-container {
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .anime-cards-container::-webkit-scrollbar {
+    display: none; /* Chrome */
+  }
+}
+
+
+
+.anime-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.anime-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 50%);
+    z-index: 1;
+}
+
+.anime-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.anime-card:hover .anime-img {
+    transform: scale(1.1);
+}
+
+.anime-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem;
+    z-index: 2;
+}
+
+.anime-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--light);
+}
+
+.anime-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.anime-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #f39c12;
+}
+
+.anime-card:hover .anime-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Genre Tags */
+.genre-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 5%;
+}
+
+.genre-tag {
+    position: relative;
+    min-width: 150px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.genre-tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    transition: var(--transition);
+}
+
+.genre-tag:hover::before {
+    background: rgba(108, 92, 231, 0.7);
+}
+
+.genre-tag span {
+    position: relative;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 1;
+}
+
+.genre-tag:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+/* News Section */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 0 5%;
+}
+
+.news-card {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: var(--transition);
+    border: 1px solid var(--glass-border);
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary);
+}
+
+.news-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.news-content {
+    padding: 1.5rem;
+}
+
+.news-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--light);
+}
+
+.news-excerpt {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+}
+
+/* Footer */
+.glass-footer {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--glass-border);
+    margin-top: 5rem;
+    padding: 3rem 5% 1rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.footer-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--primary);
+}
+
+.footer-section p, .footer-section li {
+    margin-bottom: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: var(--transition);
+}
+
+.footer-section a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-section a:hover {
+    color: var(--primary);
+    padding-left: 5px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--light);
+    transition: var(--transition);
+}
+
+.social-icons a:hover {
+    background: var(--primary);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--glass-border);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .search-container {
+        width: 25%;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-nav {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 80%;
+        height: calc(100vh - 80px);
+        background: rgba(30, 30, 46, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: var(--transition);
+        z-index: 999;
+    }
+    
+    .main-nav.active {
+        left: 0;
+    }
+    
+    .main-nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+    
+    .user-actions {
+        display: none;
+    }
+    
+    .search-container {
+        width: 50%;
+    }
+    
+    .slide-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        height: 70vh;
+    }
+    
+    .slide-content {
+        bottom: 15%;
+        left: 5%;
+    }
+    
+    .slide-title {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .anime-cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .search-container {
+        width: 70%;
+    }
+    
+    .hero-section {
+        height: 60vh;
+    }
+    
+    .slide-title {
+        font-size: 1.5rem;
+    }
+    
+    .slide-desc {
+        font-size: 1rem;
+    }
+    
+    .slide-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .primary-btn, .outline-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+} 
+/* Estilos para os cards de anime */
+.anime-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    aspect-ratio: 2/3;
+    perspective: 1000px;
+}
+
+.anime-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.anime-card:hover .anime-card-inner {
+    transform: rotateY(180deg);
+}
+
+.anime-card-front, .anime-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.anime-card-front {
+    background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.8));
+}
+
+.anime-card-back {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+    transform: rotateY(180deg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 77, 137, 0.3);
+}
+
+.anime-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.anime-card:hover .anime-img {
+    transform: scale(1.1);
+}
+
+.anime-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.anime-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px;
+    z-index: 2;
+}
+
+.anime-title {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: white;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.anime-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.anime-rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: #f39c12;
+}
+
+.anime-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.anime-tags span {
+    background: rgba(255, 77, 137, 0.2);
+    color: var(--primary);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.watch-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.watch-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 77, 137, 0.4);
+}
+</style>
+<body>
+    <div class="page-transition"></div>
+    
+    <header class="glass-header">
+        <div class="logo" data-text="AnimeVerse">AnimeVerse</div>
+        
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Buscar animes...">
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+            <div class="search-results"></div>
+        </div>
+        
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#" class="nav-link hover-underline">Início</a></li>
+                <li><a href="#" class="nav-link hover-underline">Populares</a></li>
+                <li><a href="#" class="nav-link hover-underline">Gêneros</a></li>
+                <li><a href="#" class="nav-link hover-underline">Calendário</a></li>
+                <li><a href="#" class="nav-link hover-underline">Notícias</a></li>
+            </ul>
+        </nav>
+        
+        <div class="user-actions">
+            <button class="btn login-btn">Login</button>
+            <button class="btn register-btn">Registrar</button>
+        </div>
+        
+        <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+    
+    <main>
+        <section class="hero-section">
+
+            <div class="hero-slider">
+                <!-- Attack on Titan -->
+                <div class="slide active" style="background-image: url('https://i.imgur.com/U5sXzBB.jpeg')">
+                  <div class="slide-content">
+                    <h2 class="slide-title">Attack on Titan: Final Season</h2>
+                    <p class="slide-desc">A batalha final pela humanidade começa!</p>
+                    <div class="slide-actions">
+                      <button class="btn primary-btn">Assistir Agora</button>
+                      <button class="btn outline-btn">+ Minha Lista</button>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Chainsaw Man -->
+                <div class="slide" style="background-image: url('https://i.imgur.com/rDfprUN.jpeg')">
+                  <div class="slide-content">
+                    <h2 class="slide-title">Chainsaw Man</h2>
+                    <p class="slide-desc">Denji entra numa luta sangrenta entre humanos e demônios.</p>
+                    <div class="slide-actions">
+                      <button class="btn primary-btn">Assistir Agora</button>
+                      <button class="btn outline-btn">+ Minha Lista</button>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Death Note -->
+                <div class="slide" style="background-image: url('https://i.imgur.com/FEzya2u.jpeg')">
+                  <div class="slide-content">
+                    <h2 class="slide-title">Death Note</h2>
+                    <p class="slide-desc">Um caderno que pode matar quem tiver o nome escrito nele.</p>
+                    <div class="slide-actions">
+                      <button class="btn primary-btn">Assistir Agora</button>
+                      <button class="btn outline-btn">+ Minha Lista</button>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Naruto Shippuden -->
+                <div class="slide" style="background-image: url('https://i.imgur.com/BZ0iey3.jpeg')">
+                  <div class="slide-content">
+                    <h2 class="slide-title">Naruto Shippuden</h2>
+                    <p class="slide-desc">O jovem ninja retorna mais forte para proteger quem ama.</p>
+                    <div class="slide-actions">
+                      <button class="btn primary-btn">Assistir Agora</button>
+                      <button class="btn outline-btn">+ Minha Lista</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              
+                <div class="slide" style="background-image: url('https://i.imgur.com/8mfQq8I.jpg')">
+                  <div class="slide-content">
+                    <h2 class="slide-title">Death Note</h2>
+                    <p class="slide-desc">Um caderno que decide o destino da humanidade.</p>
+                    <div class="slide-actions">
+                      <button class="btn primary-btn">Assistir Agora</button>
+                      <button class="btn outline-btn">+ Minha Lista</button>
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="slide" style="background-image: url('https://i.imgur.com/BzN8ZIv.jpg')">
+                  <div class="slide-content">
+                    <h2 class="slide-title">Naruto Shippuden</h2>
+                    <p class="slide-desc">O ninja que nunca desiste continua sua jornada.</p>
+                    <div class="slide-actions">
+                      <button class="btn primary-btn">Assistir Agora</button>
+                      <button class="btn outline-btn">+ Minha Lista</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+                <!-- Mais slides... -->
+            </div>
+            <div class="slider-controls">
+                <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
+                <div class="slider-dots"></div>
+                <button class="slider-next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+        
+        <section class="trending-section">
+            <h2 class="section-title"><span>Trending Now</span></h2>
+            <div class="anime-cards-container">
+              <!-- Adicione isso dentro da section .trending-section -->
+<div class="anime-cards-container">
+    <!-- Card 1 -->
+    <div class="anime-card">
+        <div class="anime-card-inner">
+            <div class="anime-card-front">
+                <img src="https://cdn.myanimelist.net/images/anime/1244/138851.jpg" alt="Demon Slayer" class="anime-img">
+                <div class="anime-badge">Popular</div>
+                <div class="anime-info">
+                    <h3 class="anime-title">Demon Slayer</h3>
+                    <div class="anime-meta">
+                        <span>TV</span>
+                        <span class="anime-rating">
+                            <i class="fas fa-star"></i> 8.7
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card-back">
+                <h3>Demon Slayer</h3>
+                <p>Tanjiro Kamado luta para se tornar um caçador de demônios após sua família ser massacrada.</p>
+                <div class="anime-tags">
+                    <span>Ação</span>
+                    <span>Aventura</span>
+                    <span>Sobrenatural</span>
+                </div>
+                <button class="btn watch-btn">Assistir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="anime-card">
+        <div class="anime-card-inner">
+            <div class="anime-card-front">
+                <img src="https://cdn.myanimelist.net/images/anime/10/78745.jpg" alt="Attack on Titan" class="anime-img">
+                <div class="anime-badge">Top 1</div>
+                <div class="anime-info">
+                    <h3 class="anime-title">Attack on Titan</h3>
+                    <div class="anime-meta">
+                        <span>TV</span>
+                        <span class="anime-rating">
+                            <i class="fas fa-star"></i> 9.1
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card-back">
+                <h3>Attack on Titan</h3>
+                <p>Humanidade luta pela sobrevivência contra titãs gigantes que devoram humanos.</p>
+                <div class="anime-tags">
+                    <span>Ação</span>
+                    <span>Drama</span>
+                    <span>Fantasia</span>
+                </div>
+                <button class="btn watch-btn">Assistir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="anime-card">
+        <div class="anime-card-inner">
+            <div class="anime-card-front">
+                <img src="https://cdn.myanimelist.net/images/anime/13/17405.jpg" alt="One Piece" class="anime-img">
+                <div class="anime-badge">Clássico</div>
+                <div class="anime-info">
+                    <h3 class="anime-title">Naruto</h3>
+                    <div class="anime-meta">
+                        <span>TV</span>
+                        <span class="anime-rating">
+                            <i class="fas fa-star"></i> 8.6
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card-back">
+                <h3>Naruto</h3>
+                <p>Naruto Uzumaki se torna um Ninja para poder realizar o sonho de ser hokange</p>
+                <div class="anime-tags">
+                    <span>Aventura</span>
+                    <span>Comédia</span>
+                    <span>Fantasia</span>
+                </div>
+                <button class="btn watch-btn">Assistir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="anime-card">
+        <div class="anime-card-inner">
+            <div class="anime-card-front">
+                <img src="https://cdn.myanimelist.net/images/anime/1286/99889.jpg" alt="Jujutsu Kaisen" class="anime-img">
+                <div class="anime-badge">Novidade</div>
+                <div class="anime-info">
+                    <h3 class="anime-title">Demon Slayer</h3>
+                    <div class="anime-meta">
+                        <span>TV</span>
+                        <span class="anime-rating">
+                            <i class="fas fa-star"></i> 8.8
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card-back">
+                <h3>DEMON SLAYER</h3>
+                <p>Tanjiro Kamado se torna um espadachin para poder proteger sua irmã</p>
+                <div class="anime-tags">
+                    <span>Ação</span>
+                    <span>Sobrenatural</span>
+                    <span>Horror</span>
+                </div>
+                <button class="btn watch-btn">Assistir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="anime-card">
+        <div class="anime-card-inner">
+            <div class="anime-card-front">
+                <img src="https://cdn.myanimelist.net/images/anime/9/9453.jpg" alt="Death Note" class="anime-img">
+                <div class="anime-badge">Clássico</div>
+                <div class="anime-info">
+                    <h3 class="anime-title">Death Note</h3>
+                    <div class="anime-meta">
+                        <span>TV</span>
+                        <span class="anime-rating">
+                            <i class="fas fa-star"></i> 8.6
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card-back">
+                <h3>Death Note</h3>
+                <p>Light Yagami encontra um caderno que pode matar pessoas cujos nomes são escritos nele.</p>
+                <div class="anime-tags">
+                    <span>Mistério</span>
+                    <span>Psicológico</span>
+                    <span>Suspense</span>
+                </div>
+                <button class="btn watch-btn">Assistir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="anime-card">
+        <div class="anime-card-inner">
+            <div class="anime-card-front">
+                <img src="https://cdn.myanimelist.net/images/anime/1806/126216.jpg" alt="Chainsaw Man" class="anime-img">
+                <div class="anime-badge">Em Alta</div>
+                <div class="anime-info">
+                    <h3 class="anime-title">Chainsaw Man</h3>
+                    <div class="anime-meta">
+                        <span>TV</span>
+                        <span class="anime-rating">
+                            <i class="fas fa-star"></i> 8.7
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="anime-card-back">
+                <h3>Chainsaw Man</h3>
+                <p>Denji se funde com seu demônio de estimação e se torna Chainsaw Man.</p>
+                <div class="anime-tags">
+                    <span>Ação</span>
+                    <span>Horror</span>
+                    <span>Sobrenatural</span>
+                </div>
+                <button class="btn watch-btn">Assistir</button>
+            </div>
+        </div>
+    </div>
+</div>
+  <!-- Cards serão gerados via JavaScript -->
+            </div>
+        </section>
+        
+        <section class="categories-section">
+            <h2 class="section-title"><span>Explore Gêneros</span></h2>
+            <div class="genre-tags">
+                <div class="genre-tag" style="background-image: url('https://example.com/shounen-bg.jpg')">
+                    <span>Shounen</span>
+                </div>
+                <!-- Mais gêneros... -->
+            </div>
+        </section>
+        
+        <section class="news-section">
+            <h2 class="section-title"><span>Últimas Notícias</span></h2>
+            <div class="news-grid">
+                <!-- Notícias serão geradas via JavaScript -->
+            </div>
+        </section>
+    </main>
+    
+    <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AnimeVerse</h3>
+                <p>O melhor lugar para acompanhar seus animes favoritos!</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="#">Termos de Serviço</a></li>
+                    <li><a href="#">Política de Privacidade</a></li>
+                    <li><a href="#">DMCA</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Gêneros</h3>
+                <ul>
+                    <li><a href="#">Ação</a></li>
+                    <li><a href="#">Aventura</a></li>
+                    <li><a href="#">Comédia</a></li>
+                    <li><a href="#">Drama</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 AnimeVerse. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script type="module" src="/main.js"></script> 
+    <script> 
+    // Adicione isso ao seu arquivo JavaScript existente
+
+// Efeito de hover nos cards
+document.querySelectorAll('.anime-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+            scale: 1.05,
+            boxShadow: '0 15px 30px rgba(0, 0, 0, 0.3)',
+            duration: 0.3
+        });
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+            scale: 1,
+            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
+            duration: 0.3
+        });
+    });
+    
+    // Click para mostrar detalhes
+    card.addEventListener('click', function(e) {
+        // Impede que o evento de virar card dispare quando clicar em botões
+        if (!e.target.classList.contains('watch-btn')) {
+            const animeTitle = this.querySelector('.anime-title').textContent;
+            showAnimeDetailsModal(animeTitle);
+        }
+    });
+});
+
+function showAnimeDetailsModal(title) {
+    // Criar modal
+    const modal = document.createElement('div');
+    modal.className = 'anime-modal';
+    
+    // Conteúdo do modal (simplificado - em um projeto real, buscaria mais detalhes)
+    modal.innerHTML = `
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close"><i class="fas fa-times"></i></button>
+            <h2>${title}</h2>
+            <div class="modal-body">
+                <img src="https://via.placeholder.com/300x400" alt="${title}">
+                <div class="modal-info">
+                    <p>Detalhes sobre ${title} seriam exibidos aqui, incluindo sinopse, elenco, episódios e mais.</p>
+                    <div class="modal-actions">
+                        <button class="btn primary-btn"><i class="fas fa-play"></i> Assistir Agora</button>
+                        <button class="btn outline-btn"><i class="fas fa-plus"></i> Minha Lista</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    
+    // Animação de entrada
+    gsap.from('.modal-backdrop', { opacity: 0, duration: 0.3 });
+    gsap.from('.modal-content', { y: 50, opacity: 0, duration: 0.3 });
+    
+    // Fechar modal
+    const closeBtn = modal.querySelector('.modal-close');
+    const backdrop = modal.querySelector('.modal-backdrop');
+    
+    const closeModal = () => {
+        gsap.to('.modal-content', { y: 50, opacity: 0, duration: 0.3 });
+        gsap.to('.modal-backdrop', { opacity: 0, duration: 0.3, onComplete: () => {
+            modal.remove();
+            document.body.style.overflow = 'auto';
+        }});
+    };
+    
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+}
+
+// Estilos para o modal
+const modalStyles = document.createElement('style');
+modalStyles.textContent = `
+    .anime-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .modal-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+        position: relative;
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        border-radius: 10px;
+        width: 80%;
+        max-width: 900px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 77, 137, 0.3);
+        z-index: 2;
+    }
+    
+    .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+        color: var(--primary);
+        transform: rotate(90deg);
+    }
+    
+    .modal-content h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: var(--primary);
+        text-align: center;
+    }
+    
+    .modal-body {
+        display: flex;
+        gap: 30px;
+    }
+    
+    .modal-body img {
+        width: 300px;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-info {
+        flex: 1;
+    }
+    
+    .modal-info p {
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .modal-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    @media (max-width: 768px) {
+        .modal-content {
+            width: 95%;
+            padding: 20px;
+        }
+        
+        .modal-body {
+            flex-direction: column;
+        }
+        
+        .modal-body img {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+        }
+        
+        .modal-actions {
+            flex-direction: column;
+        }
+    }
+`;
+
+document.head.appendChild(modalStyles);
+    </script> 
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.querySelector('.slider-prev');
+        const nextBtn = document.querySelector('.slider-next');
+        const dotContainer = document.querySelector('.slider-dots');
+      
+        let currentIndex = 0;
+      
+        function showSlide(index) {
+          slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+            dots[i].classList.toggle('active', i === index);
+          });
+        }
+      
+        function createDots() {
+          slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+              currentIndex = i;
+              showSlide(currentIndex);
+            });
+            dotContainer.appendChild(dot);
+          });
+        }
+      
+        createDots();
+        const dots = document.querySelectorAll('.dot');
+      
+        prevBtn.addEventListener('click', () => {
+          currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+          showSlide(currentIndex);
+        });
+      
+        nextBtn.addEventListener('click', () => {
+          currentIndex = (currentIndex + 1) % slides.length;
+          showSlide(currentIndex);
+        });
+      </script> 
+      <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.querySelector('.slider-prev');
+        const nextBtn = document.querySelector('.slider-next');
+        const dotContainer = document.querySelector('.slider-dots');
+      
+        let currentIndex = 0;
+      
+        function showSlide(index) {
+          slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+            dots[i].classList.toggle('active', i === index);
+          });
+        }
+      
+        function createDots() {
+          slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+              currentIndex = i;
+              showSlide(currentIndex);
+            });
+            dotContainer.appendChild(dot);
+          });
+        }
+      
+        createDots();
+        const dots = document.querySelectorAll('.dot');
+      
+        prevBtn.addEventListener('click', () => {
+          currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+          showSlide(currentIndex);
+        });
+      
+        nextBtn.addEventListener('click', () => {
+          currentIndex = (currentIndex + 1) % slides.length;
+          showSlide(currentIndex);
+        });
+      </script>
+      
+      
+</body>
+</html>
